@@ -67,6 +67,8 @@ template iptable_rules do
   action :create
 end
 
+noflush_flag = node['simple_iptables']['noflush'] ? "--noflush" : ""
+
 case node['platform_family']
 when 'debian'
 
@@ -75,7 +77,7 @@ when 'debian'
     owner "root"
     group "root"
     mode "0755"
-    content "#!/bin/bash\niptables-restore < #{iptable_rules}\n"
+    content "#!/bin/bash\niptables-restore #{noflush_flag} < #{iptable_rules}\n"
     action :create
   end
 end
